@@ -1,0 +1,56 @@
+CREATE TABLE road(
+    road_id INT PRIMARY KEY,
+    road_name VARCHAR(100) NOT NULL,
+    length_km DECIMAL(10,2) NOT NULL,
+    speed_limit INT,
+    highway_type VARCHAR(50),
+    location VARCHAR(100),
+    lanes INT
+);
+CREATE TABLE vehicle(
+    vehicle_id INT PRIMARY KEY,
+    vehicle_type VARCHAR(50) NOT NULL,
+    registration_number VARCHAR(50) UNIQUE NOT NULL,
+    age VARCHAR(100),
+    model VARCHAR(100),
+    year_of manufacture INT,
+);
+CREATE TABLE drivingBehavior(
+    behaviour_id INT PRIMARY KEY,
+    vehicle_id INT ,
+    road_id INT ,
+    speed INT,
+    timestamp DATETIME,
+    location_lat DOUBLE,
+    location_long DOUBLE,
+    FOREIGN KEY (vehicle_id) REFERENCES vehicle(vehicle_id),
+    FOREIGN KEY (road_id) REFERENCES road(road_id)
+);
+
+
+-- Insert sample data into road table
+INSERT INTO road (road_id, road_name, length_km, speed_limit, highway_type, location, lanes)
+VALUES (1, 'Highway 1', 100.50, 120, 'Interstate', 'City A', 4);
+
+INSERT INTO road (road_id, road_name, length_km, speed_limit, highway_type, location, lanes)
+VALUES (2, 'Street 2', 5.20, 50, 'Local', 'Town B', 2);
+
+INSERT INTO road (road_id, road_name, length_km, speed_limit, highway_type, location, lanes)
+VALUES (3, 'Avenue 3', 10.75, 80, 'Urban', 'City C', 3);
+-- Insert sample data into vehicle table
+INSERT INTO vehicle (vehicle_id, vehicle_type, registration_number, age, model, year_of_manufacture)
+VALUES (1, 'Car', 'ABC123', '5 years', 'Toyota Camry', 2019);
+
+INSERT INTO vehicle (vehicle_id, vehicle_type, registration_number, age, model, year_of_manufacture)
+VALUES (2, 'Truck', 'XYZ456', '2 years', 'Ford F-150', 2022);
+
+-- Insert sample data into drivingBehavior table
+INSERT INTO drivingBehavior (behaviour_id, vehicle_id, road_id, speed, timestamp, location_lat, location_long)
+VALUES (1, 1, 1, 110, '2023-10-01 10:00:00', 40.7128, -74.0060);
+
+INSERT INTO drivingBehavior (behaviour_id, vehicle_id, road_id, speed, timestamp, location_lat, location_long)
+VALUES (2, 2, 2, 45, '2023-10-01 11:00:00', 34.0522, -118.2437);
+
+/* vehicle(1), driving behaviour(many)
+road(1), driving behaviour(many) */
+
