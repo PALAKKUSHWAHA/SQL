@@ -1,25 +1,32 @@
 CREATE TABLE road(
     road_id INT PRIMARY KEY,
     road_name VARCHAR(100) NOT NULL,
+    area VARCHAR(100),
     length_km DECIMAL(10,2) NOT NULL,
     speed_limit INT,
-    highway_type VARCHAR(50),
+    road_type VARCHAR(50),
     location VARCHAR(100),
-    lanes INT
+    lanes INT,
+    Congestion_level VARCHAR(50)
 );
 CREATE TABLE vehicle(
     vehicle_id INT PRIMARY KEY,
     vehicle_type VARCHAR(50) NOT NULL,
     registration_number VARCHAR(50) UNIQUE NOT NULL,
+    owner_type VARCHAR(50) /*public,private,commercilal*/,
     age VARCHAR(100),
     model VARCHAR(100),
-    year_of manufacture INT,
+    road_id INT
 );
 CREATE TABLE drivingBehavior(
     behaviour_id INT PRIMARY KEY,
     vehicle_id INT ,
     road_id INT ,
     speed INT,
+    suddenbreakingCount INT,
+    Lane_violation INT,
+    Signal_jump INT,
+    accident_prone VARCHAR(5) /*(yes/no)*/,
     timestamp DATETIME,
     location_lat DOUBLE,
     location_long DOUBLE,
@@ -29,28 +36,81 @@ CREATE TABLE drivingBehavior(
 
 
 -- Insert sample data into road table
-INSERT INTO road (road_id, road_name, length_km, speed_limit, highway_type, location, lanes)
-VALUES (1, 'Highway 1', 100.50, 120, 'Interstate', 'City A', 4);
+INSERT INTO road (road_id, road_name, area, length_km, speed_limit, road_type, location, lanes, Congestion_level)
+VALUES (1, 'Highway 1', 'Suburban', 100.50, 120, 'Interstate', 'City A', 4, 'Low');
 
-INSERT INTO road (road_id, road_name, length_km, speed_limit, highway_type, location, lanes)
-VALUES (2, 'Street 2', 5.20, 50, 'Local', 'Town B', 2);
+INSERT INTO road (road_id, road_name, area, length_km, speed_limit, road_type, location, lanes, Congestion_level)
+VALUES (2, 'Street 2', 'Urban', 5.20, 50, 'Local', 'Town B', 2, 'Medium');
 
-INSERT INTO road (road_id, road_name, length_km, speed_limit, highway_type, location, lanes)
-VALUES (3, 'Avenue 3', 10.75, 80, 'Urban', 'City C', 3);
+INSERT INTO road (road_id, road_name, area, length_km, speed_limit, road_type, location, lanes, Congestion_level)
+VALUES (3, 'Avenue 3', 'Downtown', 10.75, 80, 'Urban', 'City C', 3, 'High');
+
+INSERT INTO road (road_id, road_name, area, length_km, speed_limit, road_type, location, lanes, Congestion_level)
+VALUES (4, 'Boulevard 4', 'Residential', 15.30, 60, 'Local', 'Town D', 2, 'Low');
 -- Insert sample data into vehicle table
-INSERT INTO vehicle (vehicle_id, vehicle_type, registration_number, age, model, year_of_manufacture)
-VALUES (1, 'Car', 'ABC123', '5 years', 'Toyota Camry', 2019);
+INSERT INTO vehicle (vehicle_id, vehicle_type, registration_number, owner_type, age, model, road_id)
+VALUES (1, 'Car', 'ABC123', 'Public', '5 years', 'Toyota Camry', 1);
 
-INSERT INTO vehicle (vehicle_id, vehicle_type, registration_number, age, model, year_of_manufacture)
-VALUES (2, 'Truck', 'XYZ456', '2 years', 'Ford F-150', 2022);
+INSERT INTO vehicle (vehicle_id, vehicle_type, registration_number, owner_type, age, model, road_id)
+VALUES (2, 'Truck', 'XYZ456', 'Commercial', '2 years', 'Ford F-150', 2);
+
+INSERT INTO vehicle (vehicle_id, vehicle_type, registration_number, owner_type, age, model, road_id)
+VALUES (3, 'Bike', 'BIK789', 'Private', '1 year', 'Honda CBR', 3);
 
 -- Insert sample data into drivingBehavior table
 INSERT INTO drivingBehavior (behaviour_id, vehicle_id, road_id, speed, timestamp, location_lat, location_long)
-VALUES (1, 1, 1, 110, '2023-10-01 10:00:00', 40.7128, -74.0060);
+VALUES (1, 1, 1, 115, '2023-10-01 10:00:00', 40.7128, -74.0060);
 
 INSERT INTO drivingBehavior (behaviour_id, vehicle_id, road_id, speed, timestamp, location_lat, location_long)
-VALUES (2, 2, 2, 45, '2023-10-01 11:00:00', 34.0522, -118.2437);
+VALUES (2, 2, 2, 48, '2023-10-01 11:00:00', 34.0522, -118.2437);
+
+INSERT INTO drivingBehavior (behaviour_id, vehicle_id, road_id, speed, timestamp, location_lat, location_long)
+VALUES (3, 3, 3, 78, '2023-10-01 12:00:00', 37.7749, -122.4194);
+
+INSERT INTO drivingBehavior (behaviour_id, vehicle_id, road_id, speed, timestamp, location_lat, location_long)
+VALUES (4, 1, 4, 62, '2023-10-01 13:00:00', 41.8781, -87.6298);
 
 /* vehicle(1), driving behaviour(many)
 road(1), driving behaviour(many) */
 
+/*Problem 1: List all roads with a speed limit greater than 50.Highway 1|120
+Avenue 3|80*/
+SELECT * FROM road WHERE speed_limit > 50;
+/*Problem 2: Find all vehicles that have driven on 'Highway 1'.ABC123|Toyota Camry
+*/
+SELECT v.registration_number, v.model
+FROM vehicle v
+JOIN drivingBehavior db ON v.vehicle_id = db.vehicle_id
+JOIN road r ON db.road_id = r.road_id
+WHERE r.road_name = 'Highway 1';
+/*Problem 3: Get the average speed of vehicles on 'Street 2'.45
+*/
+SELECT AVG(db.speed) AS average_speed
+FROM drivingBehavior db
+JOIN road r ON db.road_id = r.road_id
+WHERE r.road_name = 'Street 2';
+/*Problem 4: Find the total number of lanes for all roads in 'City A'.4
+*/
+SELECT SUM(lanes) AS total_lanes FROM road WHERE location = 'City A';
+/*1|Highway 1|100.5|120|Interstate|City A|4
+3|Avenue 3|10.75|80|Urban|City C|3
+ABC123|Toyota Camry
+45.0
+4*/
+
+/* create table shoping(
+parcel_price INT,
+item_id INT,
+color VARCHAR(20),
+size VARCHAR(10)
+)
+
+traffic problem: congestion, accidents, pollution, delays,traffic violations
+Tables used: road+vehicle, drivingBehavior, vehicle, road behaviour, driving behaviour
+insight:
+1. High congestion levels on specific roads during peak hours.
+2. Frequent traffic violations by certain vehicle types.
+
+problem 1: identify congested roads during peak hours.
+corelate this problem to the internet , and self thoughts.
+*/
