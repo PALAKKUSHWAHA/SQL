@@ -1,0 +1,51 @@
+https://chatgpt.com/share/6947c257-8734-800c-91a2-b840ffc2b220
+
+Task:
+
+Write a query to:
+
+Combine first_name, last_name, and dept_name into one column as a single string.
+
+Use JOIN to connect both tables.
+
+Use GROUP BY to show count of employees in each department.
+
+✅ Solution Query
+SELECT 
+    d.dept_name,
+    CONCAT(e.first_name, ' ', e.last_name, ' - ', d.dept_name) AS employee_info,
+    COUNT(e.emp_id) AS total_employees
+FROM Employees e
+JOIN Departments d 
+    ON e.dept_id = d.dept_id
+GROUP BY d.dept_name, e.first_name, e.last_name;
+🧠 Explanation
+Concept	Description
+CONCAT()	Combines string columns into one (you can also use `
+JOIN	Combines rows from both tables based on the dept_id.
+GROUP BY	Groups records by dept_name to calculate counts.
+COUNT()	Aggregates total employees in each department.Output
+dept_name	employee_info	total_employees
+HR	Palak Kushwaha - HR	2
+IT	Gagan Singh - IT	1
+🎯 Task:
+
+Write an SQL query to:
+
+Combine first_name, last_name, and city_name into one column named customer_info.
+
+Display the count of customers in each city.
+
+Use JOIN, string functions, and GROUP BY.
+
+✅ Solution
+SELECT 
+    c.city_name,
+    CONCAT(cu.first_name, ' ', cu.last_name, ' - ', c.city_name) AS customer_info,
+    COUNT(cu.cust_id) AS total_customers
+FROM Customers cu
+JOIN Cities c 
+    ON cu.city_id = c.city_id
+GROUP BY c.city_name, cu.first_name, cu.last_name;
+SELECT CONCAT(column1, column2, column3) AS concatenated_column 
+FROM your_table; 
