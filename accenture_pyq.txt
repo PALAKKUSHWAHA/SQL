@@ -1,5 +1,6 @@
 https://chatgpt.com/share/6947c257-8734-800c-91a2-b840ffc2b220
 https://drive.google.com/file/d/1sGn1aiE6gvGdakA52jjtXmN7TfogYrTB/view?usp=sharing
+https://takeuforward.org/dbms/most-asked-dbms-interview-questions
 Task:
 
 Write a query to:
