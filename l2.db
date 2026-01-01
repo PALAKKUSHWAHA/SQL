@@ -1,0 +1,23 @@
+/* create a table name friends with tree column
+id stores int, names store text, birthday stores DATETIME
+ her birthday is on may 30th, 1940
+ */
+
+ CREATE TABLE friends(
+    id INT,
+    name (100) VARCHAR,
+    birthday DATETIME,
+    email(100) VARCHAR
+ )
+  INSERT INTO friends(id,name,birthday,EMAIL)
+  VALUES(1,Storm, 1940-05-30,storm@codeacademy.com)
+  VALUES(2,Merlin Munroe, 1965-08-13)
+  VALUES(3,Elvis Prisly, 1998-07-23)
+
+
+
+
+  SELECT *
+  FROM friends
+
+  
