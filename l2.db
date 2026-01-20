@@ -1,7 +1,7 @@
 /* create a table name friends with tree column
 id stores int, names store text, birthday stores DATETIME
  her birthday is on may 30th, 1940
- */
+ 
 
  CREATE TABLE friends(
     id INT,
@@ -20,4 +20,10 @@ id stores int, names store text, birthday stores DATETIME
   SELECT *
   FROM friends
 
-  
+  */
+   select a.column1, b.column2
+   from table1 a
+   left join table2 b
+   on a.id = b.id
+   where name not like'%s';
+   
